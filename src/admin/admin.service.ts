@@ -101,6 +101,11 @@ export class AdminService {
             this.mailService.sendMail(mailOption);
             const saveData = await teacherData.save();
             if (saveData) {
+              await this.subjectModel.findByIdAndUpdate(
+                { _id: subject },
+                { $inc: { teacherCount: 1 } },
+                { new: true },
+              );
               return { success: true };
             }
           }
@@ -113,7 +118,7 @@ export class AdminService {
 
   async fetchTeachers() {
     try {
-      const allTeacher = await this.teacherModel.find({ is_delete: false });
+      const allTeacher = await this.teacherModel.find({ is_delete: false }).populate('subject')
       if (allTeacher) {
         return { fetchedData: allTeacher };
       }
@@ -308,10 +313,12 @@ export class AdminService {
         });
 
         const saveData = await new_class.save();
+       
+        
         if (saveData) {
           await this.teacherModel.findByIdAndUpdate(
             { _id: data.classTeacher },
-            { $set: { is_classTeacher: true } },
+            { $set: { is_classTeacher: true , class:saveData._id} },
           );
           return { success: true };
         }

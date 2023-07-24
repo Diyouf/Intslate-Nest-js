@@ -6,7 +6,7 @@ import { AdminModule } from './admin/admin.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { StudentModule } from './student/student.module';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthMiddleware } from './common/adminMiddleWare';
+import { AuthMiddleware } from './common/AuthMiddleWare';
 
 
 

@@ -162,6 +162,7 @@ export class StudentService {
                 const updateAmount = await this.paidFeesModel.findOneAndUpdate({ _id: userData._id }, { $set: { ...userData } })
 
                 if (updateAmount) {
+                    const date = new Date()
                     const mailOption = {
                         to: data.paymentData.email.toString(),
                         from: 'intslateofficial@gmail.com',
@@ -174,7 +175,7 @@ export class StudentService {
                           <table style="max-width:670px;margin:50px auto 10px;background-color:#fff;padding:50px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);-moz-box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24); border-top: solid 10px green;">
                             <thead>
                               <tr>
-                                <th style="text-align:right;font-weight:400;">${new Date()}</th>
+                                <th style="text-align:right;font-weight:400;">${date.toLocaleString()}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -184,8 +185,9 @@ export class StudentService {
                               <tr>
                                 <td colspan="2" style="border: solid 1px #ddd; padding:10px 20px;">
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:150px">Order status</span><b style="color:green;font-weight:normal;margin:0">Success</b></p>
-                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID</span>${foundTerm.paymentId} </p>
-                                  <p style="font-size:14px;margin:0 0 0 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Order amount</span> Rs. ${data.term.amount}.00/-</p>
+                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Term:</span>${data.paymentData.term} </p>
+                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID:</span>${foundTerm.paymentId} </p>
+                                  <p style="font-size:14px;margin:0 0 0 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Amount:</span> Rs. ${data.term.amount}.00/-</p>
                                 </td>
                               </tr>
                               <tr>

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, ObjectId, Types } from 'mongoose';
 
 export type teacherDocument = HydratedDocument<teacherSchema>;
 
@@ -21,8 +21,11 @@ export class teacherSchema {
   @Prop()
   phone: Number;
 
-  @Prop()
-  subject: String;
+  @Prop({ type: Types.ObjectId, ref: 'subject' })
+  subject: ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'classes' })
+  class: ObjectId;
   
   @Prop()
   address: String;

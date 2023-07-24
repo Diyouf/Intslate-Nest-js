@@ -6,7 +6,6 @@ import { studentModel } from '../model/admission.model';
 import { FeeStructureSchema } from '../model/fees-structure.model';
 import { FeeSchema } from '../model/fee.model';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { AuthMiddleware } from '../common/adminMiddleWare';
 
 @Module({
   imports: [
