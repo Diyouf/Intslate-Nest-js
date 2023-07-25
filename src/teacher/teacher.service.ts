@@ -90,7 +90,7 @@ export class TeacherService {
 
   async loadTeacherProfile(id: any) {
     try {
-      const teacherData = await this.teacherModel.findById({ _id: id });
+      const teacherData = await this.teacherModel.findById({ _id: id }).populate('subject').populate('class'); 
       if (teacherData) {
         return teacherData;
       }

@@ -118,7 +118,7 @@ export class AdminService {
 
   async fetchTeachers() {
     try {
-      const allTeacher = await this.teacherModel.find({ is_delete: false }).populate('subject')
+      const allTeacher = await this.teacherModel.find({ is_delete: false }).populate('subject').populate('class')
       if (allTeacher) {
         return { fetchedData: allTeacher };
       }
