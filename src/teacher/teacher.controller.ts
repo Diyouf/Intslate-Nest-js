@@ -19,4 +19,9 @@ export class TeacherController {
     async loadTeacherProfile(@Query('id') id :any): Promise<any> {
         return await this.service.loadTeacherProfile(id)
     }
+
+    @Get('fetchStudents')
+    async fetchStudent (@Query('id') id :string):Promise<any>{
+        return await this.service.fetchStudent(id)
+    }
 }

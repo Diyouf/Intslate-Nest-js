@@ -17,7 +17,7 @@ export class StudentController {
     }
 
     @Get('fetchStudentProfile')
-    async fetchStudentData(@Query('id') id: any): Promise<any> {
+    async fetchStudentData(@Query('id') id:string ): Promise<any> {
         return await this.studentService.studentProfile(id)
     }
 
@@ -27,7 +27,7 @@ export class StudentController {
     }
 
     @Get('fetchPaidFees')
-    async getPaidStudent(@Query('id') id: any): Promise<any> {
+    async getPaidStudent(@Query('id') id:string ): Promise<any> {
         return await this.studentService.paidStudent(id)
     }
 

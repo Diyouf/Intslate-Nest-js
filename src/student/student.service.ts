@@ -95,7 +95,7 @@ export class StudentService {
         }
     }
 
-    async studentProfile(id: any) {
+    async studentProfile(id:string ) {
         try {
             const studentData = await this.studentModel.findById({ _id: id }).populate({ path: 'class', populate: { path: 'classTeacher', model: 'teacher' } });
             return studentData
@@ -116,7 +116,7 @@ export class StudentService {
         }
     }
 
-    async paidStudent(id: any) {
+    async paidStudent(id:string ) {
         try {
 
 
@@ -128,7 +128,7 @@ export class StudentService {
         }
     }
 
-    async paymentUpdates(id: any, data: any) {
+    async paymentUpdates(id:string , data: any) {
         try {
 
             const termId = data.term.id

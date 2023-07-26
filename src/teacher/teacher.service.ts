@@ -4,12 +4,15 @@ import { Model } from 'mongoose';
 import { teacherDocument } from '../model/teacher.model';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { studentDocument } from '../model/admission.model';
 
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectModel('teacher')
     private readonly teacherModel: Model<teacherDocument>,
+    @InjectModel('student')
+    private readonly studentModel: Model<studentDocument>,
     private jwtService: JwtService,
   ) {}
 
@@ -88,14 +91,31 @@ export class TeacherService {
     }
   }
 
-  async loadTeacherProfile(id: any) {
+  async loadTeacherProfile(id: string) {
     try {
-      const teacherData = await this.teacherModel.findById({ _id: id }).populate('subject').populate('class'); 
+      const teacherData = await this.teacherModel
+        .findById({ _id: id })
+        .populate('subject')
+        .populate('class');
       if (teacherData) {
         return teacherData;
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async fetchStudent(id: string) {
+    try {
+      const teacherId = await this.teacherModel.findById({ _id: id });
+      if (teacherId) {
+        const classId = teacherId.class;
+
+        const studentData = await this.studentModel.find({ class: classId });
+        return studentData;
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   }
 }

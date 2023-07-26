@@ -62,13 +62,13 @@ export class AdminController {
   }
 
   @Post('approveAdmission')
-  async approveAdmission(@Query('id') id: any , @Body() formData:any): Promise<any> {
+  async approveAdmission(@Query('id') id:string  , @Body() formData:any): Promise<any> {
     return await this.adminService.approveAdmission(id,formData)
   }
 
 
   @Get('rejectAdmission')
-  async rejectAdmission(@Query('id') id: any): Promise<any> {    
+  async rejectAdmission(@Query('id') id:string ): Promise<any> {    
     return await this.adminService.reject(id)
   }
 

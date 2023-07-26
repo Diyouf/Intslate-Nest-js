@@ -1,25 +1,28 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TeacherController } from './teacher.controller';
 import { TeacherService } from './teacher.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { teacherModel } from '../model/teacher.model';
+import { studentModel } from '../model/admission.model';
 
 @Module({
-  imports:[
-    MongooseModule.forFeature([ { name: 'teacher', schema: teacherModel }]),
+  imports: [
+    MongooseModule.forFeature([
+      { name: 'teacher', schema: teacherModel },
+      { name: 'student', schema: studentModel },
+    ]),
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',
         auth: {
           user: 'intslateofficial@gmail.com',
-          pass: 'tqtupwdbqpwrdjgc'
-        }
-      }
-    })
+          pass: 'tqtupwdbqpwrdjgc',
+        },
+      },
+    }),
   ],
   controllers: [TeacherController],
-  providers: [TeacherService]
+  providers: [TeacherService],
 })
-export class TeacherModule{
-}
+export class TeacherModule {}

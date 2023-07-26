@@ -165,7 +165,7 @@ export class AdminService {
     }
   }
 
-  async approveAdmission(id: any, data: any) {
+  async approveAdmission(id:string , data: any) {
     try {
       enum status {
         approve = 'Approved',
@@ -228,7 +228,7 @@ export class AdminService {
     }
   }
 
-  async reject(id: any) {
+  async reject(id:string ) {
     try {
       enum status {
         approve = 'Approved',
@@ -385,7 +385,7 @@ export class AdminService {
     }
   }
 
-  async updateFee(id: any, data: any) {
+  async updateFee(id:string , data: any) {
     try {
       const updateData = await this.feeStructure.findByIdAndUpdate(
         { _id: id },
@@ -409,7 +409,7 @@ export class AdminService {
     }
   }
 
-  async fetchClassData(id: any) {
+  async fetchClassData(id:string ) {
     try {
       const classData = await this.classModel
         .findById({ _id: id })
@@ -422,7 +422,7 @@ export class AdminService {
     }
   }
 
-  async updataClassData(id: any, formData: any) {
+  async updataClassData(id:string , formData: any) {
     try {
       const update = await this.classModel.findByIdAndUpdate(
         { _id: id },
@@ -445,7 +445,7 @@ export class AdminService {
     }
   }
 
-  async deleteTeacher(id: any) {
+  async deleteTeacher(id:string ) {
     try {
       const deleteTeacher = await this.teacherModel.findByIdAndUpdate(
         { _id: id },
