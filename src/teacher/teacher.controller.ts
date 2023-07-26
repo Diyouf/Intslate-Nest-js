@@ -24,4 +24,16 @@ export class TeacherController {
     async fetchStudent (@Query('id') id :string):Promise<any>{
         return await this.service.fetchStudent(id)
     }
+
+    @Post('addHomeWork')
+    async addHomeWork (@Query('id') id:string,@Body() data : any):Promise<any>{
+        return await this.service.addHomeWork(id,data)
+    }
+
+    @Get('fetchHomework')
+    async fetchHomeWork(@Query('id') id : string):Promise<any>{
+        return await this.service.fetchHomeWork(id)
+    }
+
+
 }

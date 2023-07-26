@@ -5,6 +5,7 @@ import { teacherDocument } from '../model/teacher.model';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { studentDocument } from '../model/admission.model';
+import { homeWorkDocument } from '../model/homeWork.model';
 
 @Injectable()
 export class TeacherService {
@@ -13,6 +14,8 @@ export class TeacherService {
     private readonly teacherModel: Model<teacherDocument>,
     @InjectModel('student')
     private readonly studentModel: Model<studentDocument>,
+    @InjectModel('homework')
+    private readonly homeworkModel: Model<homeWorkDocument>,
     private jwtService: JwtService,
   ) {}
 
@@ -116,6 +119,43 @@ export class TeacherService {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  }
+
+  async addHomeWork(id:string ,data:any){
+    try {
+     if(data){
+      const saveData = new this.homeworkModel({
+         teacher:id,
+         class:data.class,
+         dueDate:data.dueDate,
+         homework:data.homework,
+         date:new Date()
+      })
+      if(saveData){
+        await saveData.save()
+        return true
+      }else{
+        return false
+      }
+     }
+      
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+  }
+
+  async fetchHomeWork(id:string){
+    try {
+       const homeWorkData = await this.homeworkModel.find({teacher:id}).populate('class')
+       if(homeWorkData){
+        return homeWorkData
+       }
+      
+    } catch (error) {
+      console.log(error.message);
+      
     }
   }
 }

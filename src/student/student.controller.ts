@@ -32,8 +32,13 @@ export class StudentController {
     }
 
     @Post('hitPayment')
-    async hitPayment(@Query('studentId') id :string,@Body() data : any){
+    async hitPayment(@Query('studentId') id :string,@Body() data : any): Promise<any>{
         return await this.studentService.paymentUpdates(id,data)
+    }
+
+    @Get('fetchHomeWorks')
+    async fetchHomeWorks(@Query('id') id :string): Promise<any>{
+        return await this.studentService.fetchHomeWorks(id)
     }
 
 }
