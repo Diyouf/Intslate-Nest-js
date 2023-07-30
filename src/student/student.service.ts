@@ -132,6 +132,8 @@ export class StudentService {
 
   async paymentUpdates(id: string, data: any) {
     try {
+      
+      
       const termId = data.term.id;
 
       const userData = await this.paidFeesModel.findOne({ student: id });
@@ -187,7 +189,7 @@ export class StudentService {
                                 <td colspan="2" style="border: solid 1px #ddd; padding:10px 20px;">
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:150px">Order status</span><b style="color:green;font-weight:normal;margin:0">Success</b></p>
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Term:</span>${
-                                    data.paymentData.term
+                                    data.term.term
                                   } </p>
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID:</span>${
                                     foundTerm.paymentId
