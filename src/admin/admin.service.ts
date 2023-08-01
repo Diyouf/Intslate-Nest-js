@@ -10,6 +10,8 @@ import { classSchema } from '../model/class.model';
 import { FeeStructure } from '../model/fees-structure.model';
 import { Fee } from '../model/fee.model';
 import { subjectSchema } from '../model/subject.model';
+import { addEvent, loadEvent } from './interfaces';
+import { EventDocument } from 'src/model/event.model';
 
 @Injectable()
 export class AdminService {
@@ -24,6 +26,7 @@ export class AdminService {
     private readonly feeStructure: Model<FeeStructure>,
     @InjectModel('fee') private readonly studentFee: Model<Fee>,
     @InjectModel('subject') private readonly subjectModel: Model<subjectSchema>,
+    @InjectModel('events') private readonly eventModel: Model<EventDocument>,
 
     private readonly mailService: MailerService,
     private jwtService: JwtService,
@@ -506,6 +509,43 @@ export class AdminService {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  }
+
+  async addEvent(formData:addEvent,file:{filename:string}){
+    try {   
+
+      if(formData && file){
+        const saveData = new this.eventModel({
+          date:new Date(),
+          title : formData?.title,
+          description:formData?.description,
+          avenue:formData?.avenue,
+          image:file?.filename,
+          ConductingDate:formData?.date
+        })
+
+        if(saveData){
+          await saveData.save()
+          return true
+        }
+      }
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  async getEvents():Promise<loadEvent[]>{
+    try {
+      const eventData = await this.eventModel.find({}).sort({date:-1})
+      if(eventData){
+        return eventData
+      }
+    } catch (error) {
+      console.log(error);
+      
     }
   }
 }

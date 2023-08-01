@@ -4,6 +4,7 @@ import { adminSchema } from '../model/admin.model'
 import { teacherSchema } from '../model/teacher.model'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { addEvent, loadEvent } from './interfaces';
 
 @Controller('admin')
 export class AdminController {
@@ -140,6 +141,27 @@ export class AdminController {
   @Get('fetchSubject')
   async fetchSubject():Promise<any>{
     return await this.adminService.fetchSubject()
+  }
+
+  @Post('addEvent')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './events',
+      filename: (req, file, cb) => {
+        const name = file.originalname.split('.')[0];
+        const fileExtension = file.originalname.split('.')[1];
+        const newFileName = name.split(" ").join("_") + "_" + Date.now() + "." + fileExtension;
+        cb(null, newFileName);
+      }
+    })
+  }))
+  async addEvent(@UploadedFile() file: Express.Multer.File, @Body() formdata: addEvent):Promise<boolean>{
+    return await this.adminService.addEvent(formdata,file)
+  }
+
+  @Get('loadEvnets')
+  async loadEvent():Promise<loadEvent[]>{
+    return await this.adminService.getEvents()
   }
 
 

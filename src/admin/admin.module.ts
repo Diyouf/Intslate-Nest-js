@@ -10,6 +10,7 @@ import { classModel } from '../model/class.model';
 import { FeeSchema } from '../model/fee.model';
 import { FeeStructureSchema } from '../model/fees-structure.model';
 import { subjectModel } from '../model/subject.model';
+import { EventModel } from '../model/event.model';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { subjectModel } from '../model/subject.model';
       { name: 'fee', schema: FeeSchema },
       { name: 'fee-structure', schema: FeeStructureSchema },
       { name: 'subject', schema: subjectModel },
+      { name: 'events', schema: EventModel },
     ]),
     MailerModule.forRoot({
       transport: {

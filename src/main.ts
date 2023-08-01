@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors()
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.use('/studentImage', express.static(join(__dirname, '..', 'studentImage')));
+  app.use('/events', express.static(join(__dirname, '..', 'events')));
   await app.listen(3000);
 
 }
