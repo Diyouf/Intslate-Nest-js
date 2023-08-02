@@ -24,6 +24,9 @@ export class EventSchema {
   @Prop()
   ConductingDate: Date;
 
+  @Prop({})
+  is_active: boolean;
+
 }
 
 export const EventModel = SchemaFactory.createForClass(EventSchema);

@@ -5,6 +5,7 @@ import { teacherSchema } from '../model/teacher.model'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { addEvent, loadEvent } from './interfaces';
+import { EventDocument } from 'src/model/event.model';
 
 @Controller('admin')
 export class AdminController {
@@ -160,11 +161,18 @@ export class AdminController {
   }
 
   @Get('loadEvnets')
-  async loadEvent():Promise<loadEvent[]>{
+  async loadEvent():Promise<EventDocument[]>{
     return await this.adminService.getEvents()
   }
 
-
+  @Get('inactiveEvent')
+  async inactiveEvent(@Query('id') id:string):Promise<boolean>{
+    return await this.adminService.InactiveEvent(id)
+  }
+  @Get('activeEvent')
+  async activeEvent(@Query('id') id:string):Promise<boolean>{
+    return await this.adminService.activeEvent(id)
+  }
 
 }
 

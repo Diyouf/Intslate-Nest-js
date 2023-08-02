@@ -522,7 +522,8 @@ export class AdminService {
           description:formData?.description,
           avenue:formData?.avenue,
           image:file?.filename,
-          ConductingDate:formData?.date
+          ConductingDate:formData?.date,
+          is_active:true
         })
 
         if(saveData){
@@ -537,11 +538,35 @@ export class AdminService {
     }
   }
 
-  async getEvents():Promise<loadEvent[]>{
+  async getEvents():Promise<EventDocument[]>{
     try {
-      const eventData = await this.eventModel.find({}).sort({date:-1})
+      const eventData = (await this.eventModel.find({}).sort({date:-1}))
       if(eventData){
         return eventData
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  async InactiveEvent(id:string){
+    try {
+      const updateEvent = await this.eventModel.findByIdAndUpdate({_id:id},{$set:{is_active:false}})
+      if(updateEvent){
+        return true
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  async activeEvent(id:string){
+    try {
+      const updateEvent = await this.eventModel.findByIdAndUpdate({_id:id},{$set:{is_active:true}})
+      if(updateEvent){
+        return true
       }
     } catch (error) {
       console.log(error);
