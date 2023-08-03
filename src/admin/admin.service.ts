@@ -10,7 +10,7 @@ import { classSchema } from '../model/class.model';
 import { FeeStructure } from '../model/fees-structure.model';
 import { Fee } from '../model/fee.model';
 import { subjectSchema } from '../model/subject.model';
-import { addEvent, loadEvent } from './interfaces';
+import { addEvent} from './interfaces';
 import { EventDocument } from 'src/model/event.model';
 
 @Injectable()

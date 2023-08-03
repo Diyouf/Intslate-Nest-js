@@ -4,7 +4,7 @@ import { adminSchema } from '../model/admin.model'
 import { teacherSchema } from '../model/teacher.model'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { addEvent, loadEvent } from './interfaces';
+import { addEvent} from './interfaces';
 import { EventDocument } from 'src/model/event.model';
 
 @Controller('admin')
