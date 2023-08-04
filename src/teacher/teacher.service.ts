@@ -148,7 +148,7 @@ export class TeacherService {
 
   async fetchHomeWork(id:string){
     try {
-       const homeWorkData = await this.homeworkModel.find({teacher:id}).populate('class')
+       const homeWorkData = await this.homeworkModel.find({teacher:id}).populate('class').sort({date :-1})
        if(homeWorkData){
         return homeWorkData
        }

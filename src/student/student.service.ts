@@ -265,7 +265,7 @@ export class StudentService {
               populate: {
                 path: 'subject', // Assuming 'subject' is the field referencing the subject model
               },
-            }).sort({date:1})
+            }).sort({date:-1})
 
           return homeWorkData;
         }

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose"
 
 export interface addEvent {
     title:String,
@@ -8,14 +7,5 @@ export interface addEvent {
     avenue:String
 }
 
-export interface loadEvent {
-    _id?: string | ObjectId; // Use `string | ObjectId` for the _id property
-    title: string;
-    description: string;
-    image: string;
-    date: Date;
-    avenue: string;
-    ConductingDate: Date;
-  }
-  
+
 

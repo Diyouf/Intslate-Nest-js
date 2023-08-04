@@ -123,7 +123,7 @@ export class AdminService {
     try {
       const allTeacher = await this.teacherModel.find({ is_delete: false }).populate('subject').populate('class')
       if (allTeacher) {
-        return { fetchedData: allTeacher };
+        return  allTeacher
       }
     } catch (error) {
       console.log(error.message);
@@ -402,7 +402,7 @@ export class AdminService {
         { new: true },
       );
 
-      console.log(updateData);
+    
 
       if (updateData) {
         return { success: true };
