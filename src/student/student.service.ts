@@ -8,6 +8,8 @@ import { FeeStructure } from '../model/fees-structure.model';
 import { Fee } from '../model/fee.model';
 import { MailerService } from '@nestjs-modules/mailer';
 import { homeWorkDocument } from '../model/homeWork.model';
+import { leaveFormData } from './student.interfaces';
+import { leaveReqDocument } from '../model/leaveReq.model';
 
 @Injectable()
 export class StudentService {
@@ -17,6 +19,7 @@ export class StudentService {
     @InjectModel('fee-structure')
     private readonly feeStructure: Model<FeeStructure>,
     @InjectModel('fee') private readonly paidFeesModel: Model<Fee>,
+    @InjectModel('leaveReq') private readonly leaveReqModel: Model<leaveReqDocument>,
     @InjectModel('homework')
     private readonly homeworkModel: Model<homeWorkDocument>,
     private readonly mailService: MailerService,
@@ -274,4 +277,30 @@ export class StudentService {
       console.log(error.message);
     }
   }
+
+async leaveReq (id:string , formData:leaveFormData){
+  try {
+    const studentData = await this.studentModel.findById({_id:id})
+    const classId = studentData.class
+   const saveData = new this.leaveReqModel({
+    noofday:formData.noofday,
+    endDate:formData.endDate,
+    startDate:formData.startDate,
+    reason :formData.reason,
+    student:id,
+    class:classId,
+    currentDate:new Date()
+   })
+   if(saveData){
+    await saveData.save()
+    return {success:true}
+   }
+    
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}
+
+
 }

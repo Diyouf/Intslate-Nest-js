@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { studentDocument } from '../model/admission.model';
 import { homeWorkDocument } from '../model/homeWork.model';
+import { leaveReqDocument } from '../model/leaveReq.model';
 
 @Injectable()
 export class TeacherService {
@@ -17,6 +18,7 @@ export class TeacherService {
     @InjectModel('homework')
     private readonly homeworkModel: Model<homeWorkDocument>,
     private jwtService: JwtService,
+    @InjectModel('leaveReq') private readonly leaveReqModel: Model<leaveReqDocument>,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -34,7 +36,7 @@ export class TeacherService {
           return { alreadyReg: 'You are already Registered..' };
         } else {
           if (checkId.email !== email) {
-            return { emailMatch: 'Email number is not match..' };
+            return { emailMatch: 'Email  is not match..' };
           } else if (checkId.phone === phone) {
             const hashedPass = await this.hashPassword(password);
 
@@ -158,4 +160,33 @@ export class TeacherService {
       
     }
   }
+
+  async fetchLeaveReq(id:string){
+    try {
+      const teacherData = await this.teacherModel.findById({_id:id})    
+      const classId = teacherData.class  
+
+      const LeaveData = await this.leaveReqModel.find({class:classId}).populate('student')
+     if(LeaveData){
+      return LeaveData
+     }
+      
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+  }
+
+  async approveReq(id:string){
+    try {
+      const updateStatus = await this.leaveReqModel.findByIdAndUpdate({_id:id},{$set:{status:'Approved'}})
+      if(updateStatus){
+        return {success:true}
+      }
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+  }
+
 }

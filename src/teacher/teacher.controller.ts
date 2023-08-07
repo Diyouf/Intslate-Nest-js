@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Get, Query } from '@nestjs/common';
 import { TeacherService } from './teacher.service'
+import { leaveReqDocument } from '../model/leaveReq.model';
 
 @Controller('teacher')
 export class TeacherController {
@@ -33,6 +34,16 @@ export class TeacherController {
     @Get('fetchHomework')
     async fetchHomeWork(@Query('id') id : string):Promise<any>{
         return await this.service.fetchHomeWork(id)
+    }
+
+    @Get('loadLeaveReq')
+    async fetchLeaveReq(@Query('id') id : string):Promise<leaveReqDocument[]>{
+        return await this.service.fetchLeaveReq(id)
+    }
+
+    @Get('approveReq')
+    async approveReq(@Query('id') id : string):Promise<{success:boolean}>{
+        return await this.service.approveReq(id)
     }
 
 

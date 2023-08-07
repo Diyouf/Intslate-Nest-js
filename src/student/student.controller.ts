@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { StudentService } from './student.service';
+import { leaveFormData } from './student.interfaces';
+import { async } from 'rxjs';
 
 @Controller('student')
 export class StudentController {
@@ -39,6 +41,11 @@ export class StudentController {
     @Get('fetchHomeWorks')
     async fetchHomeWorks(@Query('id') id :string): Promise<any>{
         return await this.studentService.fetchHomeWorks(id)
+    }
+
+    @Post('leaveApplication')
+    async leaveRequest(@Query('id') id : string,@Body() data : leaveFormData):Promise<{success:boolean}>{
+        return await this.studentService.leaveReq(id,data)
     }
 
 }
