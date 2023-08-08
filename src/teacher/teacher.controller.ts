@@ -1,6 +1,8 @@
 import { Body, Controller, Post, Get, Query } from '@nestjs/common';
 import { TeacherService } from './teacher.service'
 import { leaveReqDocument } from '../model/leaveReq.model';
+import { AddAttendance } from './teacher.interface';
+import { attendanceDocument } from '../model/attendance.model';
 
 @Controller('teacher')
 export class TeacherController {
@@ -45,6 +47,26 @@ export class TeacherController {
     async approveReq(@Query('id') id : string):Promise<{success:boolean}>{
         return await this.service.approveReq(id)
     }
+
+    @Get('rejectReq')
+    async rejectReq(@Query('id') id : string):Promise<{success:boolean}>{
+        return await this.service.rejectReq(id)
+    }
+
+    @Post('addAttendance')
+    async addAttendance(@Query('id') id : string,@Body() data:AddAttendance):Promise<{success?:boolean,alreadySubmitted?:string}>{
+        return await this.service.addAttendance(id,data);
+    }
+
+    @Get('loadAttendance')
+    async fetchAttendance(
+      @Query('id') id: string,
+      @Query('today') today: Date,
+    ): Promise<any> {
+      const formattedToday = new Date(today); // Parse the received date string
+      return await this.service.fetchAttendance(id, formattedToday);
+    }
+    
 
 
 }

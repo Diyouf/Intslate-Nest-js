@@ -7,6 +7,7 @@ import { teacherModel } from '../model/teacher.model';
 import { studentModel } from '../model/admission.model';
 import { homeWorkModel } from '../model/homeWork.model';
 import { leaveReqModel } from '../model/leaveReq.model';
+import { attendanceModel } from '../model/attendance.model';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { leaveReqModel } from '../model/leaveReq.model';
       { name: 'student', schema: studentModel },
       { name: 'homework', schema: homeWorkModel },
       { name: 'leaveReq', schema: leaveReqModel },
+      { name: 'attendance', schema: attendanceModel },
     ]),
     MailerModule.forRoot({
       transport: {

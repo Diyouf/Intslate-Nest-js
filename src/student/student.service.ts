@@ -10,6 +10,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { homeWorkDocument } from '../model/homeWork.model';
 import { leaveFormData } from './student.interfaces';
 import { leaveReqDocument } from '../model/leaveReq.model';
+import { attendanceDocument } from '../model/attendance.model';
 
 @Injectable()
 export class StudentService {
@@ -22,6 +23,8 @@ export class StudentService {
     @InjectModel('leaveReq') private readonly leaveReqModel: Model<leaveReqDocument>,
     @InjectModel('homework')
     private readonly homeworkModel: Model<homeWorkDocument>,
+    @InjectModel('attendance')
+    private readonly attendanceModel: Model<attendanceDocument>,
     private readonly mailService: MailerService,
     private jwtService: JwtService,
   ) {}
@@ -295,6 +298,35 @@ async leaveReq (id:string , formData:leaveFormData){
     await saveData.save()
     return {success:true}
    }
+    
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}
+
+async fetchAttendance(id:string){
+  try {
+    const studentId = await this.studentModel.findById({_id:id})
+    const classId = studentId.class
+    const attendanceData = await this.attendanceModel.find({
+      class: classId,
+      'attendance.studentId': studentId._id 
+    });
+
+    const formattedAttendance = attendanceData.flatMap(item => {
+      return item.attendance
+        .filter(entry => entry.studentId.equals(studentId._id))
+        .map(entry => {
+          return {
+            attendance: entry.attendance,
+            date: item.date.toISOString().split('T')[0]
+          };
+        });
+    });
+
+    return formattedAttendance
+
     
   } catch (error) {
     console.log(error.message);

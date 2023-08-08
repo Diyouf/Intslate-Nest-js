@@ -8,6 +8,7 @@ import { FeeSchema } from '../model/fee.model';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { homeWorkModel } from '../model/homeWork.model';
 import { leaveReqModel } from '../model/leaveReq.model';
+import { attendanceModel } from '../model/attendance.model';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { leaveReqModel } from '../model/leaveReq.model';
         { name: 'fee', schema: FeeSchema },
         { name: 'homework', schema: homeWorkModel },
         { name: 'leaveReq', schema: leaveReqModel },
+        { name: 'attendance', schema: attendanceModel },
       ]),
       MailerModule.forRoot({
         transport: {

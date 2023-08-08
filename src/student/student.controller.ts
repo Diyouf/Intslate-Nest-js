@@ -48,4 +48,9 @@ export class StudentController {
         return await this.studentService.leaveReq(id,data)
     }
 
+    @Get('fetchAttendance')
+    async fetchAttendance(@Query('id') id :string):Promise<any>{
+        return await this.studentService.fetchAttendance(id)
+    }
+
 }

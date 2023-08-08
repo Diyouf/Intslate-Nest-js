@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { studentDocument } from '../model/admission.model';
 import { homeWorkDocument } from '../model/homeWork.model';
 import { leaveReqDocument } from '../model/leaveReq.model';
+import { AddAttendance } from './teacher.interface';
+import { attendanceDocument } from '../model/attendance.model';
 
 @Injectable()
 export class TeacherService {
@@ -18,7 +20,10 @@ export class TeacherService {
     @InjectModel('homework')
     private readonly homeworkModel: Model<homeWorkDocument>,
     private jwtService: JwtService,
-    @InjectModel('leaveReq') private readonly leaveReqModel: Model<leaveReqDocument>,
+    @InjectModel('leaveReq')
+    private readonly leaveReqModel: Model<leaveReqDocument>,
+    @InjectModel('attendance')
+    private readonly attendanceModel: Model<attendanceDocument>,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -124,69 +129,136 @@ export class TeacherService {
     }
   }
 
-  async addHomeWork(id:string ,data:any){
+  async addHomeWork(id: string, data: any) {
     try {
-     if(data){
-      const saveData = new this.homeworkModel({
-         teacher:id,
-         class:data.class,
-         dueDate:data.dueDate,
-         homework:data.homework,
-         date:new Date()
-      })
-      if(saveData){
-        await saveData.save()
-        return true
-      }else{
-        return false
-      }
-     }
-      
-    } catch (error) {
-      console.log(error.message);
-      
-    }
-  }
-
-  async fetchHomeWork(id:string){
-    try {
-       const homeWorkData = await this.homeworkModel.find({teacher:id}).populate('class').sort({date :-1})
-       if(homeWorkData){
-        return homeWorkData
-       }
-      
-    } catch (error) {
-      console.log(error.message);
-      
-    }
-  }
-
-  async fetchLeaveReq(id:string){
-    try {
-      const teacherData = await this.teacherModel.findById({_id:id})    
-      const classId = teacherData.class  
-
-      const LeaveData = await this.leaveReqModel.find({class:classId}).populate('student')
-     if(LeaveData){
-      return LeaveData
-     }
-      
-    } catch (error) {
-      console.log(error.message);
-      
-    }
-  }
-
-  async approveReq(id:string){
-    try {
-      const updateStatus = await this.leaveReqModel.findByIdAndUpdate({_id:id},{$set:{status:'Approved'}})
-      if(updateStatus){
-        return {success:true}
+      if (data) {
+        const saveData = new this.homeworkModel({
+          teacher: id,
+          class: data.class,
+          dueDate: data.dueDate,
+          homework: data.homework,
+          date: new Date(),
+        });
+        if (saveData) {
+          await saveData.save();
+          return true;
+        } else {
+          return false;
+        }
       }
     } catch (error) {
       console.log(error.message);
-      
     }
   }
 
+  async fetchHomeWork(id: string) {
+    try {
+      const homeWorkData = await this.homeworkModel
+        .find({ teacher: id })
+        .populate('class')
+        .sort({ date: -1 });
+      if (homeWorkData) {
+        return homeWorkData;
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async fetchLeaveReq(id: string) {
+    try {
+      const teacherData = await this.teacherModel.findById({ _id: id });
+      const classId = teacherData.class;
+
+      const LeaveData = await this.leaveReqModel
+        .find({ class: classId })
+        .populate('student');
+      if (LeaveData) {
+        return LeaveData;
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async approveReq(id: string) {
+    try {
+      const updateStatus = await this.leaveReqModel.findByIdAndUpdate(
+        { _id: id },
+        { $set: { status: 'Approved' } },
+      );
+      if (updateStatus) {
+        return { success: true };
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async rejectReq(id: string) {
+    try {
+      const updateStatus = await this.leaveReqModel.findByIdAndUpdate(
+        { _id: id },
+        { $set: { status: 'Rejected' } },
+      );
+      if (updateStatus) {
+        return { success: true };
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async addAttendance(id: string, data: AddAttendance) {
+    try {
+      const teacherId = await this.teacherModel.findById({ _id: id });
+      const classId = teacherId.class;
+
+      const currentDate = new Date();
+
+      const DateCheck = await this.attendanceModel.findOne({
+        class: classId,
+        date: currentDate.toISOString().split('T')[0],
+      });
+
+      if (DateCheck) {
+        return {
+          alreadySubmitted: 'today is already submitted',
+        };
+      } else {
+        const newData = new this.attendanceModel({
+          class: classId,
+          date: currentDate.toISOString().split('T')[0],
+          attendance: data.attendance,
+        });
+
+        const saveData = await newData.save();
+        if (saveData) {
+          return { success: true };
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async fetchAttendance(id: string, date: Date) {
+    try {
+      const teacherId = await this.teacherModel.findById({ _id: id });
+      const classId = teacherId.class;
+
+      const DateCheck = await this.attendanceModel
+        .findOne({
+          class: classId,
+          date: date.toISOString().split('T')[0],
+        })
+        .populate('attendance.studentId', 'name email image');
+
+      if (DateCheck) {
+        return DateCheck;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
