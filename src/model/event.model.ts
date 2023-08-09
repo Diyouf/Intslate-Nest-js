@@ -1,32 +1,32 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument} from 'mongoose';
+  import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+  import { HydratedDocument} from 'mongoose';
 
-export type EventDocument = HydratedDocument<EventSchema>;
+  export type EventDocument = HydratedDocument<EventSchema>;
 
-@Schema({ collection:'events'})
-export class EventSchema {
+  @Schema({ collection:'events'})
+  export class EventSchema {
 
-  @Prop()
-  date: Date;
+    @Prop()
+    date: Date;
 
-  @Prop()
-  title: String;
+    @Prop()
+    title: String;
 
-  @Prop()
-  description: String;
+    @Prop()
+    description: String;
 
-  @Prop()
-  avenue: String;
+    @Prop()
+    avenue: String;
 
-  @Prop()
-  image: String;
+    @Prop()
+    image: String;
 
-  @Prop()
-  ConductingDate: Date;
+    @Prop()
+    ConductingDate: Date;
 
-  @Prop({})
-  is_active: boolean;
+    @Prop({})
+    is_active: boolean;
 
-}
+  }
 
-export const EventModel = SchemaFactory.createForClass(EventSchema);
+  export const EventModel = SchemaFactory.createForClass(EventSchema);

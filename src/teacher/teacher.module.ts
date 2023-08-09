@@ -8,6 +8,8 @@ import { studentModel } from '../model/admission.model';
 import { homeWorkModel } from '../model/homeWork.model';
 import { leaveReqModel } from '../model/leaveReq.model';
 import { attendanceModel } from '../model/attendance.model';
+import { ChatModel } from '../model/chat.model';
+import { ConnectionModel } from '../model/connection.model';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { attendanceModel } from '../model/attendance.model';
       { name: 'homework', schema: homeWorkModel },
       { name: 'leaveReq', schema: leaveReqModel },
       { name: 'attendance', schema: attendanceModel },
+      { name: 'connections', schema: ConnectionModel },
+      { name: 'chats', schema: ChatModel },
     ]),
     MailerModule.forRoot({
       transport: {

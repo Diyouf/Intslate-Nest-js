@@ -68,5 +68,14 @@ export class TeacherController {
     }
     
 
+    @Get('getConnection')
+    async fetchConnections(@Query('id') id:string):Promise<any>{
+        return await this.service.loadConnection(id)
+    }
+
+    @Get('loadAllChats')
+    async loadAllChats(@Query('id') id:string){
+        return await this.service.loadAllChats(id)
+    }
 
 }

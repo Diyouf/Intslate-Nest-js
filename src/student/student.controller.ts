@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { leaveFormData } from './student.interfaces';
-import { async } from 'rxjs';
+import { teacherDocument } from '../model/teacher.model';
+import { homeWorkDocument } from '../model/homeWork.model';
 
 @Controller('student')
 export class StudentController {
@@ -39,7 +40,7 @@ export class StudentController {
     }
 
     @Get('fetchHomeWorks')
-    async fetchHomeWorks(@Query('id') id :string): Promise<any>{
+    async fetchHomeWorks(@Query('id') id :string): Promise<homeWorkDocument[]>{
         return await this.studentService.fetchHomeWorks(id)
     }
 
@@ -51,6 +52,21 @@ export class StudentController {
     @Get('fetchAttendance')
     async fetchAttendance(@Query('id') id :string):Promise<any>{
         return await this.studentService.fetchAttendance(id)
+    }
+
+    @Get('fetchTeacher')
+    async fetchTeacher():Promise<teacherDocument[]>{
+        return await this.studentService.fetchTeacher()
+    }
+
+    @Post('setConnection')
+    async setConnection(@Body() data:{teacherId:string,studentId:string}):Promise<any>{        
+        return await this.studentService.setConnection(data)
+    }
+
+    @Get('loadMesssages')
+    async loadMessage(@Query('id') id:string){
+        return await this.studentService.loadallMessage(id)
     }
 
 }

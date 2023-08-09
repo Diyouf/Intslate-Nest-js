@@ -11,6 +11,9 @@ import { homeWorkDocument } from '../model/homeWork.model';
 import { leaveFormData } from './student.interfaces';
 import { leaveReqDocument } from '../model/leaveReq.model';
 import { attendanceDocument } from '../model/attendance.model';
+import { teacherDocument } from '../model/teacher.model';
+import { ConnectionDocument } from '../model/connection.model';
+import { ChatDocument } from '../model/chat.model';
 
 @Injectable()
 export class StudentService {
@@ -20,11 +23,18 @@ export class StudentService {
     @InjectModel('fee-structure')
     private readonly feeStructure: Model<FeeStructure>,
     @InjectModel('fee') private readonly paidFeesModel: Model<Fee>,
-    @InjectModel('leaveReq') private readonly leaveReqModel: Model<leaveReqDocument>,
+    @InjectModel('leaveReq')
+    private readonly leaveReqModel: Model<leaveReqDocument>,
     @InjectModel('homework')
     private readonly homeworkModel: Model<homeWorkDocument>,
     @InjectModel('attendance')
     private readonly attendanceModel: Model<attendanceDocument>,
+    @InjectModel('teacher')
+    private readonly teacherModel: Model<teacherDocument>,
+    @InjectModel('connections')
+    private readonly connectionModel: Model<ConnectionDocument>,
+    @InjectModel('chats')
+    private readonly chatModel: Model<ChatDocument>,
     private readonly mailService: MailerService,
     private jwtService: JwtService,
   ) {}
@@ -138,8 +148,6 @@ export class StudentService {
 
   async paymentUpdates(id: string, data: any) {
     try {
-      
-      
       const termId = data.term.id;
 
       const userData = await this.paidFeesModel.findOne({ student: id });
@@ -271,7 +279,8 @@ export class StudentService {
               populate: {
                 path: 'subject', // Assuming 'subject' is the field referencing the subject model
               },
-            }).sort({date:-1})
+            })
+            .sort({ date: -1 });
 
           return homeWorkData;
         }
@@ -281,58 +290,105 @@ export class StudentService {
     }
   }
 
-async leaveReq (id:string , formData:leaveFormData){
-  try {
-    const studentData = await this.studentModel.findById({_id:id})
-    const classId = studentData.class
-   const saveData = new this.leaveReqModel({
-    noofday:formData.noofday,
-    endDate:formData.endDate,
-    startDate:formData.startDate,
-    reason :formData.reason,
-    student:id,
-    class:classId,
-    currentDate:new Date()
-   })
-   if(saveData){
-    await saveData.save()
-    return {success:true}
-   }
-    
-  } catch (error) {
-    console.log(error.message);
-    
+  async leaveReq(id: string, formData: leaveFormData) {
+    try {
+      const studentData = await this.studentModel.findById({ _id: id });
+      const classId = studentData.class;
+      const saveData = new this.leaveReqModel({
+        noofday: formData.noofday,
+        endDate: formData.endDate,
+        startDate: formData.startDate,
+        reason: formData.reason,
+        student: id,
+        class: classId,
+        currentDate: new Date(),
+      });
+      if (saveData) {
+        await saveData.save();
+        return { success: true };
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-}
 
-async fetchAttendance(id:string){
-  try {
-    const studentId = await this.studentModel.findById({_id:id})
-    const classId = studentId.class
-    const attendanceData = await this.attendanceModel.find({
-      class: classId,
-      'attendance.studentId': studentId._id 
-    });
+  async fetchAttendance(id: string) {
+    try {
+      const studentId = await this.studentModel.findById({ _id: id });
+      const classId = studentId.class;
+      const attendanceData = await this.attendanceModel.find({
+        class: classId,
+        'attendance.studentId': studentId._id,
+      });
 
-    const formattedAttendance = attendanceData.flatMap(item => {
-      return item.attendance
-        .filter(entry => entry.studentId.equals(studentId._id))
-        .map(entry => {
-          return {
-            attendance: entry.attendance,
-            date: item.date.toISOString().split('T')[0]
-          };
-        });
-    });
+      const formattedAttendance = attendanceData.flatMap((item) => {
+        return item.attendance
+          .filter((entry) => entry.studentId.equals(studentId._id))
+          .map((entry) => {
+            return {
+              attendance: entry.attendance,
+              date: item.date.toISOString().split('T')[0],
+            };
+          });
+      });
 
-    return formattedAttendance
-
-    
-  } catch (error) {
-    console.log(error.message);
-    
+      return formattedAttendance;
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-}
+
+  async fetchTeacher() {
+    try {
+      const teacherData = await this.teacherModel.find({}).populate('subject');
+      if (teacherData) {
+        return teacherData;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async setConnection(data: { teacherId: string; studentId: string }) {
+    try {
+      if (data) {
+        const alreadyCheck = await this.connectionModel
+          .findOne({
+            'connection.student': data.studentId,
+            'connection.teacher': data.teacherId,
+          })
+          .populate('connection.student connection.teacher')
+          .exec();
 
 
+        if (alreadyCheck) {
+          return alreadyCheck;
+        } else {
+          const connection = new this.connectionModel({
+            connection: {
+              student: data?.studentId,
+              teacher: data?.teacherId,
+            },
+          });
+          if (connection) {
+            const savedData = await connection.save();
+            return savedData;
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async loadallMessage(id: string) {
+    try {
+      const allMessage = await this.chatModel.find({ connection: id });
+      if (allMessage) {
+        return allMessage;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

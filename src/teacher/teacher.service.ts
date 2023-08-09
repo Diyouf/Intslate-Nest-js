@@ -9,6 +9,8 @@ import { homeWorkDocument } from '../model/homeWork.model';
 import { leaveReqDocument } from '../model/leaveReq.model';
 import { AddAttendance } from './teacher.interface';
 import { attendanceDocument } from '../model/attendance.model';
+import { ChatDocument } from '../model/chat.model';
+import { ConnectionDocument } from '../model/connection.model';
 
 @Injectable()
 export class TeacherService {
@@ -24,6 +26,10 @@ export class TeacherService {
     private readonly leaveReqModel: Model<leaveReqDocument>,
     @InjectModel('attendance')
     private readonly attendanceModel: Model<attendanceDocument>,
+    @InjectModel('connections')
+    private readonly connectionModel: Model<ConnectionDocument>,
+    @InjectModel('chats')
+    private readonly chatModel: Model<ChatDocument>,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -261,4 +267,48 @@ export class TeacherService {
       console.log(error);
     }
   }
+
+  async loadConnection(id: string) {
+    try {
+      const connectionData = await this.connectionModel
+        .find({ 'connection.teacher': id })
+        .populate({
+          path: 'connection.student',
+          populate: {
+            path: 'class',
+            populate: [{ path: 'className' }, { path: 'division' }],
+          },
+        })
+        .populate('connection.teacher')
+        .exec();
+
+      if (connectionData) {
+        return connectionData;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async loadAllChats(id:string){
+    try {
+      const findAllChats = await this.chatModel
+      .find({ connection: id })
+      .populate({
+        path: 'connection',
+        populate: [
+          { path: 'connection.student' },
+          { path: 'connection.teacher' },
+        ],
+      })
+      .exec();
+    if(findAllChats)   {
+        return findAllChats
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
 }

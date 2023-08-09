@@ -13,6 +13,7 @@ import { StudentModule } from './student/student.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from './common/AuthMiddleWare';
 import { UserModule } from './user/user.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
       signOptions: { expiresIn: '7d' },
     }),
     UserModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
