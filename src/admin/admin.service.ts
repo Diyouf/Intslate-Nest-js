@@ -59,7 +59,7 @@ export class AdminService {
     }
   }
 
-  async addteacher(formdata: any, file: any) {
+  async addteacher(formdata: any, file: {filename:string}) {
     try {
       const { name, email, gender, phone, subject, address } = formdata;
       const checkEmail = await this.teacherModel.findOne({ email });
@@ -146,6 +146,7 @@ export class AdminService {
       state: data.state,
       zip: data.zip,
       address: data.address,
+      is_approved:'pending',
       admissoinDate: Date.now(),
     });
 
@@ -159,7 +160,7 @@ export class AdminService {
 
   async getAdmmissionData() {
     try {
-      const getAdmissionData = await this.studentModel.find();
+      const getAdmissionData = await this.studentModel.find().sort({admissoinDate:-1})
       if (getAdmissionData) {
         return { data: getAdmissionData };
       }
@@ -279,8 +280,13 @@ export class AdminService {
       const userData = await this.studentModel
         .find({ is_approved: 'Approved' })
         .sort({ admissoinDate: -1 })
-        .populate('class')
-        .exec();
+        .populate({
+          path: 'class',
+          populate: {
+            path: 'classTeacher',
+            
+          }})
+          .exec();
       if (userData) {
         return { data: userData };
       }
