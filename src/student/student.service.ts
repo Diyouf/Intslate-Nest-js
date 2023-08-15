@@ -383,7 +383,7 @@ export class StudentService {
 
   async loadallMessage(id: string) {
     try {
-      const allMessage = await this.chatModel.find({ connection: id });
+      const allMessage = await this.chatModel.find({ connection: id }).sort({date:1})
       if (allMessage) {
         
         return allMessage;
