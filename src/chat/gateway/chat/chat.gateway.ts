@@ -24,11 +24,8 @@ export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
   }
 
   @SubscribeMessage('sendMessage')
-  async handleMessage(socket:Socket,message:Message){
-    // const connectionFind = await this.connectionModel.findById({_id:message.connectionId})
-   
-    
-    
+  async handleMessage(socket:Socket,message:Message){   
+        
     const newChat = new this.chatModel({
       connection:message.connectionId,
       from:message.senderName,

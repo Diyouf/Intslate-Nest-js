@@ -4,3 +4,9 @@ export interface leaveFormData {
     endDate ?:Date
     reason?:string 
 }
+
+export interface resetPass {
+    currentPass?:string 
+    newPass?:string 
+    confirmPass?:string 
+}

@@ -8,7 +8,7 @@ import { FeeStructure } from '../model/fees-structure.model';
 import { Fee } from '../model/fee.model';
 import { MailerService } from '@nestjs-modules/mailer';
 import { homeWorkDocument } from '../model/homeWork.model';
-import { leaveFormData } from './student.interfaces';
+import { leaveFormData, resetPass } from './student.interfaces';
 import { leaveReqDocument } from '../model/leaveReq.model';
 import { attendanceDocument } from '../model/attendance.model';
 import { teacherDocument } from '../model/teacher.model';
@@ -37,7 +37,7 @@ export class StudentService {
     private readonly chatModel: Model<ChatDocument>,
     private readonly mailService: MailerService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
@@ -202,15 +202,12 @@ export class StudentService {
                               <tr>
                                 <td colspan="2" style="border: solid 1px #ddd; padding:10px 20px;">
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:150px">Order status</span><b style="color:green;font-weight:normal;margin:0">Success</b></p>
-                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Term:</span>${
-                                    data.term.term
-                                  } </p>
-                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID:</span>${
-                                    foundTerm.paymentId
-                                  } </p>
-                                  <p style="font-size:14px;margin:0 0 0 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Amount:</span> Rs. ${
-                                    data.term.amount
-                                  }.00/-</p>
+                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Term:</span>${data.term.term
+              } </p>
+                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID:</span>${foundTerm.paymentId
+              } </p>
+                                  <p style="font-size:14px;margin:0 0 0 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Amount:</span> Rs. ${data.term.amount
+              }.00/-</p>
                                 </td>
                               </tr>
                               <tr>
@@ -218,25 +215,19 @@ export class StudentService {
                               </tr>
                               <tr>
                               <td style="width:50%;padding:20px;vertical-align:top">
-                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">ID No.</span>#${
-                                    studentData.studentId
-                                  }</p>
-                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px">Name</span>${
-                                    studentData.name
-                                  }</p>
-                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Email</span> ${
-                                    studentData.email
-                                  }</p>
-                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Phone</span> +91-${
-                                    studentData.phone
-                                  }</p>
+                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">ID No.</span>#${studentData.studentId
+              }</p>
+                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px">Name</span>${studentData.name
+              }</p>
+                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Email</span> ${studentData.email
+              }</p>
+                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Phone</span> +91-${studentData.phone
+              }</p>
                                 </td>
                                 <td style="width:50%;padding:20px;vertical-align:top">
-                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Address</span> ${
-                                    studentData.address
-                                  },${studentData.city} ,${
-              studentData.state
-            }, ${studentData.zip}</p>
+                                  <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Address</span> ${studentData.address
+              },${studentData.city} ,${studentData.state
+              }, ${studentData.zip}</p>
                                 </td>
                               </tr>
                              
@@ -383,13 +374,32 @@ export class StudentService {
 
   async loadallMessage(id: string) {
     try {
-      const allMessage = await this.chatModel.find({ connection: id }).sort({date:1})
+      const allMessage = await this.chatModel.find({ connection: id }).sort({ date: 1 })
       if (allMessage) {
-        
+
         return allMessage;
       }
     } catch (error) {
       console.log(error);
     }
   }
+
+  async resetPassword(id: string, data: resetPass) {
+    try {
+      const studentData = await this.studentModel.findById({ _id: id })
+      const passMatch = await bcrypt.compare(data.currentPass, studentData.password);
+      if (passMatch) {
+        const hashedPass = await this.hashPassword(data.newPass);
+        await this.studentModel.findByIdAndUpdate({ _id: id }, { $set: { password: hashedPass } })
+        return { success: true }
+      } else {
+        return { currWrong: 'Current password is wrong..' }
+      }
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
 }

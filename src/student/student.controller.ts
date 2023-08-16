@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { StudentService } from './student.service';
-import { leaveFormData } from './student.interfaces';
+import { leaveFormData, resetPass } from './student.interfaces';
 import { teacherDocument } from '../model/teacher.model';
 import { homeWorkDocument } from '../model/homeWork.model';
 
@@ -69,4 +69,8 @@ export class StudentController {
         return await this.studentService.loadallMessage(id)
     }
 
+    @Post('resetPassword')
+    async resetPassword(@Query('id') id:string ,@Body() data : resetPass):Promise<any>{
+        return await this.studentService.resetPassword(id,data)
+    }
 }
