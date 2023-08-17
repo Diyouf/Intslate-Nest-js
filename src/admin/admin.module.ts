@@ -4,7 +4,6 @@ import { AdminController } from './admin.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdminSchema } from '../model/admin.model';
 import { teacherModel } from '../model/teacher.model';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { studentModel } from '../model/admission.model';
 import { classModel } from '../model/class.model';
 import { FeeSchema } from '../model/fee.model';
@@ -24,17 +23,14 @@ import { EventModel } from '../model/event.model';
       { name: 'subject', schema: subjectModel },
       { name: 'events', schema: EventModel },
     ]),
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.gmail.com',
-        auth: {
-          user: 'intslateofficial@gmail.com',
-          pass: 'tqtupwdbqpwrdjgc',
-        },
-      },
-    }),
+   
   ],
   controllers: [AdminController],
   providers: [AdminService],
 })
-export class AdminModule {}
+export class AdminModule {
+  constructor(){
+    
+    
+  }
+}

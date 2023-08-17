@@ -14,20 +14,32 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from './common/AuthMiddleWare';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
+import * as dotenv from 'dotenv'
+import { MailerModule } from '@nestjs-modules/mailer';
+dotenv.config()
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/project-SM'),
+    MongooseModule.forRoot(process.env.MONGO_DB_CONFIG),
     AdminModule,
     TeacherModule,
     StudentModule,
     JwtModule.register({
       global: true,
-      secret: 'jwtSecret',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '7d' },
     }),
     UserModule,
     ChatModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.HOST_MAIL,
+        auth: {
+          user:  process.env.EMAIL,
+          pass: process.env.NODE_MAILER_PASS,
+        },
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { studentModel } from '../model/admission.model';
 import { FeeStructureSchema } from '../model/fees-structure.model';
 import { FeeSchema } from '../model/fee.model';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { homeWorkModel } from '../model/homeWork.model';
 import { leaveReqModel } from '../model/leaveReq.model';
 import { attendanceModel } from '../model/attendance.model';
@@ -27,15 +26,7 @@ import { ChatModel } from '../model/chat.model';
         { name: 'connections', schema: ConnectionModel },
         { name: 'chats', schema: ChatModel },
       ]),
-      MailerModule.forRoot({
-        transport: {
-          host: 'smtp.gmail.com',
-          auth: {
-            user: 'intslateofficial@gmail.com',
-            pass: 'tqtupwdbqpwrdjgc'
-          }
-        }
-      }),
+      
   ],
   controllers: [StudentController],
   providers: [StudentService]
