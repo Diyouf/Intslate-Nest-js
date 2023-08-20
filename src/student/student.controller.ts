@@ -3,6 +3,7 @@ import { StudentService } from './student.service';
 import { leaveFormData, resetPass } from './student.interfaces';
 import { teacherDocument } from '../model/teacher.model';
 import { homeWorkDocument } from '../model/homeWork.model';
+import { leaveReqDocument } from 'src/model/leaveReq.model';
 
 @Controller('student')
 export class StudentController {
@@ -72,5 +73,14 @@ export class StudentController {
     @Post('resetPassword')
     async resetPassword(@Query('id') id:string ,@Body() data : resetPass):Promise<any>{
         return await this.studentService.resetPassword(id,data)
+    }
+
+    @Get('loadleaveRequest')
+    async loadLeaveReq(@Query('id') id:string):Promise<leaveReqDocument[]>{
+        return await this.studentService.loadLeaveReq(id)
+    }
+    @Get('deleteLeaveReq')
+    async deleteLeaveReq(@Query('id') id:string):Promise<{success: boolean}>{
+        return await this.studentService.deleteLeaveReq(id)
     }
 }

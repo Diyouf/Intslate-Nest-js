@@ -201,7 +201,7 @@ export class StudentService {
                               </tr>
                               <tr>
                                 <td colspan="2" style="border: solid 1px #ddd; padding:10px 20px;">
-                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:150px">Order status</span><b style="color:green;font-weight:normal;margin:0">Success</b></p>
+                                  <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:150px">Payment status</span><b style="color:green;font-weight:normal;margin:0">Success</b></p>
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Term:</span>${data.term.term
               } </p>
                                   <p style="font-size:14px;margin:0 0 6px 0;"><span style="font-weight:bold;display:inline-block;min-width:146px">Transaction ID:</span>${foundTerm.paymentId
@@ -394,6 +394,33 @@ export class StudentService {
         return { success: true }
       } else {
         return { currWrong: 'Current password is wrong..' }
+      }
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  async loadLeaveReq(id: string) {
+    try {
+      const leaveData = await this.leaveReqModel.find({ student: id }).sort({ currentDate: -1 })
+      if (leaveData) {
+
+        return leaveData
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  async deleteLeaveReq(id: string) {
+    try {
+      const deleted = await this.leaveReqModel.deleteOne({ _id: id });
+      if (deleted) {
+
+        return { success: true }
       }
 
     } catch (error) {

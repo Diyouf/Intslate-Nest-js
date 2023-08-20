@@ -30,7 +30,7 @@ export class TeacherService {
     private readonly connectionModel: Model<ConnectionDocument>,
     @InjectModel('chats')
     private readonly chatModel: Model<ChatDocument>,
-  ) {}
+  ) { }
 
   async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
@@ -248,19 +248,19 @@ export class TeacherService {
     }
   }
 
-  async fetchAttendance(id: string, date: Date) {
+  async fetchAttendance(id: string) {
     try {
       const teacherId = await this.teacherModel.findById({ _id: id });
       const classId = teacherId.class;
 
       const DateCheck = await this.attendanceModel
-        .findOne({
+        .find({
           class: classId,
-          date: date.toISOString().split('T')[0],
         })
         .populate('attendance.studentId', 'name email image');
 
       if (DateCheck) {
+      
         return DateCheck;
       }
     } catch (error) {
@@ -290,24 +290,24 @@ export class TeacherService {
     }
   }
 
-  async loadAllChats(id:string){
+  async loadAllChats(id: string) {
     try {
       const findAllChats = await this.chatModel
-      .find({ connection: id })
-      .populate({
-        path: 'connection',
-        populate: [
-          { path: 'connection.student' },
-          { path: 'connection.teacher' },
-        ],
-      })
-      .exec();
-    if(findAllChats)   {
+        .find({ connection: id })
+        .populate({
+          path: 'connection',
+          populate: [
+            { path: 'connection.student' },
+            { path: 'connection.teacher' },
+          ],
+        }).sort({ date: 1 })
+        .exec();
+      if (findAllChats) {
         return findAllChats
       }
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 

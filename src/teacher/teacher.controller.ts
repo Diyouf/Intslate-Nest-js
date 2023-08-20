@@ -61,10 +61,9 @@ export class TeacherController {
     @Get('loadAttendance')
     async fetchAttendance(
       @Query('id') id: string,
-      @Query('today') today: Date,
+     
     ): Promise<any> {
-      const formattedToday = new Date(today); // Parse the received date string
-      return await this.service.fetchAttendance(id, formattedToday);
+      return await this.service.fetchAttendance(id);
     }
     
 
