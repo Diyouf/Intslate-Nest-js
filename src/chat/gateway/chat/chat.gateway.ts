@@ -8,9 +8,9 @@ import { Message } from '../chat.interfaces';
 import * as dotenv from 'dotenv' 
 dotenv.config()
 
-const port = process.env.FRONT_END_PORT
+// const port = process.env.FRONT_END_PORT
 
-@WebSocketGateway({cors:{origin:[port]}})
+@WebSocketGateway({cors:{origin:['http://localhost:4200']}})
 export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
 
   constructor(
@@ -29,8 +29,6 @@ export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
   @SubscribeMessage('sendMessage')
   async handleMessage(socket:Socket,message:Message){   
         
-    console.log(message);
-    
     const newChat = new this.chatModel({
       connection:message.connectionId,
       from:message.senderName,

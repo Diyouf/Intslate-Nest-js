@@ -12,7 +12,7 @@ export class UserService {
 
     async loadAllEvents(){
         try {
-            const eventData = <EventDocument[]> await this.eventModel.find({is_active:true})
+            const eventData = <EventDocument[]> await this.eventModel.find({is_active:true}).sort({date:-1})
             if(eventData){
                 return eventData
             }
