@@ -8,9 +8,9 @@ import { Message } from '../chat.interfaces';
 import * as dotenv from 'dotenv' 
 dotenv.config()
 
-// const port = process.env.FRONT_END_PORT
+const port = process.env.FRONT_END_PORT
 
-@WebSocketGateway({cors:{origin:['http://localhost:4200']}})
+@WebSocketGateway({cors:{origin:[port]}})
 export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
 
   constructor(
